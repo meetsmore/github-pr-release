@@ -17,7 +17,8 @@ module.exports = function createReleasePR (config) {
       var message = releaseMessage(template, prs)
 
       client.assignReviewers(releasePR, prs)
-      return client.updatePR(releasePR, message)
+      client.updatePR(releasePR, message)
+      return prs
     })
   })
 }
