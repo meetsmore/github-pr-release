@@ -9,12 +9,16 @@ module.exports = function createReleasePR (config) {
 
   return client.prepareReleasePR().then(function (releasePR) {
     return client.collectReleasePRs(releasePR).then(function (prs) {
+      if (typeof config.mapFunction === 'function') {
+        prs = prs.map(config.mapFunction)
+      }
       var templatePath = config.template || path.join(__dirname, 'release.mustache')
       var template = fs.readFileSync(templatePath, 'utf8')
       var message = releaseMessage(template, prs)
 
       client.assignReviewers(releasePR, prs)
-      return client.updatePR(releasePR, message)
+      client.updatePR(releasePR, message)
+      return prs
     })
   })
 }
